@@ -1,4 +1,67 @@
+/* Procesar formularios con jQuery
+*/
 $.fn.formularios = function() {
+        //solicitar que se notifique a correo
+$($(this).find('input[name="opciones"]')).on('click', function() {
+    collapse=$(this).parents('form').find('div.collapse');
+    inputs=$(collapse).find('input,textarea,select');
+    //email=$(this).parent().next().find('input[name="correo"]');
+ if($(this).is(':checked')){
+    $(inputs).each(function(){
+        $(this).removeAttr('disabled');
+    });
+    //$(email).removeAttr('disabled');
+    $(collapse).collapse('toggle');
+ }
+ else{
+    $(inputs).each(function(){
+        $(this).attr('disabled','disabled');
+    });
+    //$(email).attr('disabled','disabled');
+    $(collapse).collapse('toggle');
+ }
+});
+    //Solicitar contraseña automatica
+$($(this).find('input[name="autopass"]')).on('click', function() {
+    resultado=$(this).parents("form").find('div.result');
+    pass=$(this).parents("form").find('input[name="pass"]');
+    repass=$(this).parents("form").find('input[name="repass"]');
+    
+    if($(this).is(':checked')){
+        $(pass).attr('disabled','disabled').addClass('inp_success').val("1234");
+        $(repass).attr('disabled','disabled').addClass('inp_success').val("1234");
+        $(resultado).empty().append('<div class="col-xs-12"><div class="alert alert-text alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><i class="fa fa-info-circle"></i> Se te enviara tu contraseña al correo.</div></div>');
+    }
+    else{
+        $(pass).removeAttr('disabled').removeClass('inp_success').val("");
+        $(repass).removeAttr('disabled').removeClass('inp_success').val("");
+        $(resultado).empty().append('<div class="col-xs-12"><div class="alert alert-text alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><i class="fa fa-info-circle"></i> Proporcionenos una contraseña.</div></div>');
+    }
+});
+
+
+//Mostrar imagen a subir
+ $($(this).find('input[name="imagen"]')).on('change',function(){
+        readURL(this);
+    });
+
+//Activar o desactivar edicion de formulario
+$($(this).find('.btn-edit-disabled')).on("click", function(){
+    type=$(this).parents("form").attr("tipo");
+    input=$(this).parents("form").find('input');
+    submit=$(this).parents("form").find('button[type="submit"]');
+    if($(input).attr('disabled')=='disabled'){
+    $(this).addClass('btn-active');
+    $(input).removeAttr('disabled');
+    $(submit).children('i').removeClass('fa-check-square-o').addClass('fa-mail-forward');
+    if(type=="edicion"){$(submit).removeAttr("disabled");}
+    } else {
+    $(this).removeClass('btn-active');
+    $(input).attr('disabled','disabled');
+    $(submit).children('i').removeClass('fa-mail-forward').addClass('fa-check-square-o');
+    if(type=="edicion"){$(submit).attr("disabled","disabled");}
+    }
+});
 //Formularios
 $(this).on("submit", function() {
     //Declaracion de variables de los formularios
