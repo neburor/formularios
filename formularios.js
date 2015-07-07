@@ -19,51 +19,18 @@ $(this).on("submit", function() {
     imgpreview=$(this).find('img');
 
  //Inputs de los formularios para verificar si existen y si son correctas
-    if($(this).find('input[name="correo"]:not(:disabled)').length){ 
-        status["correo"]=checkINPUT($(this).find('input[name="correo"]')); 
-        inputs["correo"]=$(this).find('input[name="correo"]'); 
-    }
-    if($(this).find('input[name="nombre"]:not(:disabled)').length){ 
-        status["nombre"]=checkINPUT($(this).find('input[name="nombre"]')); 
-        inputs["nombre"]=$(this).find('input[name="nombre"]');
-    }
-    if($(this).find('textarea[name="comentario"]:not(:disabled)').length){ 
-        status["comentario"]=checkINPUT($(this).find('textarea[name="comentario"]')); 
-        inputs["comentario"]=$(this).find('textarea[name="comentario"]');
-    }
-    if($(this).find('input[name="titulo"]:not(:disabled)').length){ 
-        status["titulo"]=checkINPUT($(this).find('input[name="titulo"]')); 
-        inputs["titulo"]=$(this).find('input[name="titulo"]');
-        contenido=$(this).find('input[name="titulo"]').val();
-    }
-    if($(this).find('input[name="escritor"]:not(:disabled)').length){ 
-        status["escritor"]=checkINPUT($(this).find('input[name="escritor"]')); 
-        inputs["escritor"]=$(this).find('input[name="escritor"]');
-        contenido=$(this).find('input[name="escritor"]').val();
-    }
-    if($(this).find('input[name="imagen"]:not(:disabled)').length){ 
-        status["imagen"]=checkINPUT($(this).find('input[name="imagen"]')); 
-        inputs["imagen"]=$(this).find('input[name="imagen"]');
-        contenido=$(this).find('input[name="imagen"]').val();
-    }
-    if($(this).find('input[name="pass"]:not(:disabled)').length){ 
-        status["pass"]=checkINPUT($(this).find('input[name="pass"]'));
-        inputs["pass"]=$(this).find('input[name="pass"]');
-    }
-    if(tipo=="password"){
-        if(($(this).find('input[name="pass"]:not(:disabled)').val())!=($(this).find('input[name="repass"]:not(:disabled)').val())){
-        status["repass"]="diferente";   
-        } 
-        else {status["repass"]="igual";}
-    }
-    if($(this).find('input[name="correoaenviar"]:not(:disabled)').length){ 
-        status["correoaenviar"]=checkINPUT($(this).find('input[name="correoaenviar"]'));
-        inputs["correoaenviar"]=$(this).find('input[name="correoaenviar"]');
-    }
-    if($(this).find('input[name="enlacepdf"]:not(:disabled)').length){ 
-        status["enlacepdf"]=checkINPUT($(this).find('input[name="enlacepdf"]'));
-        inputs["enlacepdf"]=$(this).find('input[name="enlacepdf"]');
-    }
+     $($(this).find('input,textarea,select')).each(function(){
+        if($(this).is(':disabled')){}
+        else {
+            if($(this).attr('name')!='opciones'){
+            status[$(this).attr('name')]=checkINPUT($(this)); 
+            inputs[$(this).attr('name')]=$(this);
+                if($(this).attr('name')=='titulo'||$(this).attr('name')=='escritor'||$(this).attr('name')=='imagen'){
+                    contenido=$(this).val();
+                }
+            }
+        }
+    }); 
 //Detectar la verificacion de los inputs 
 for(var name in status) {
     type="input";
