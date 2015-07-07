@@ -76,9 +76,13 @@ if(!empty($_FILES)){
 }
 
 #Verificar que todos los datos esten correctos
+$dataError=0;
 foreach ($dataStatus as $name => $value) {
 	if(!$dataStatus[$name]=='valido'){ $dataError++;}
 
+}
+if($dataError==0){
+	ConectarDB();
 }	
 
 include 'cuentas.php';
@@ -148,7 +152,7 @@ if($tipo!="contacto" && $tipo!="imgupload" && $tipo!="edicion" && $tipo!="verifi
 	foreach ($dataForm as $name => $value) {
 		if($name!="tipo" && $name!="token" && $name!="device"){
 			$columna=$name;
-			$dato=$_POST[$name]);
+			$dato=$value;
 
 			if($name=="titulo"){$columnaB="tlatino";}
 			if($name=="escritor"){$columnaB="director";}
