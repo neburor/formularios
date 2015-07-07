@@ -394,6 +394,7 @@ function readURL(input) {
             reader.readAsDataURL(input.files[0]);
         }
 }
+//Agregar a una tabla de datos con datatable
 function DatatableAdd (datatable,tipo,contenido) {
         if(tipo=="titulo"){tipo='<b>T<span class="hidden-xxs">itulo</span></b>'; }
         if(tipo=="escritor"){tipo='<b>E<span class="hidden-xxs">scritor</span></b>'; }
@@ -414,6 +415,7 @@ var rowNode = table
  
 $( rowNode ).css( { color :'#907164' } );
 }
+//Crear fecha actual
 function Fecha(){
     fecha = new Date();
     dia= fecha.getDate();
