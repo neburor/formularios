@@ -91,18 +91,15 @@ $tipo=$dataForm["tipo"];
 ##FORMULARIO DE CONTACTO
 if($tipo=="contacto"){
 
-	$nombre=str_replace($caracteresB, $caracteresR, strtolower($_POST['nombre']));
-	$comentario=str_replace($caracteresB, $caracteresR, strtolower($_POST['comentario']));
-
-	if($correo == "" || $nombre == "" || $comentario == "") {
-	  $resultados["resultado"]="sindatos";
+	if($dataForm['correo'] == "" || $dataForm['nombre'] == "" || ($dataForm['mensaje'] == "" || $dataForm['comentario'] == "") ) {
+	  $dataStatus["resultado"]="sindatos";
 	}
 	else{
-		if(mysql_query("INSERT INTO `correos_contacto` (`id`, `id_c`, `fecha`, `comentario`) VALUES (NULL, '".$cuenta."', '".date("Y-m-d H:i:s")."', '".strtolower($comentario)."')")) {
-    		$resultados["resultado"]="guardado";
+		if(mysql_query("INSERT INTO `correos_contacto` (`id`, `id_c`, `fecha`, `comentario`) VALUES (NULL, '".$cuenta."', '".date("Y-m-d H:i:s")."', '".strtolower($dataForm['mensaje'])."')")) {
+    		$dataStatus["resultado"]="guardado";
 		}
 		else {
-    	$resultados["resultado"]="noguardado";
+    	$dataStatus["resultado"]="noguardado";
 		}
 	}
 }
@@ -118,18 +115,18 @@ if($tipo=="imgupload"){
 			$id = mysql_insert_id();
 		}
    		else { 
-   			$resultados["resultado"]="noguardado";
+   			$dataStatus["resultado"]="noguardado";
    		}
     
     	//comprobamos si el archivo ha subido
     	if ($file && move_uploaded_file($_FILES['imagen']['tmp_name'],"../imagenes/aportaciones/".$id."-".$file)){ 
-    		$resultados["resultado"]="guardado"; }
+    		$dataStatus["resultado"]="guardado"; }
 		else { 
 			//throw new Exception("Error Processing Request", 1); 
 		}
 	} 
 	else { 
-		$resultados["resultado"]="muygrande";
+		$dataStatus["resultado"]="muygrande";
 	}
 }
 ##FORMULARIO EDITAR PREFERENCIAS
@@ -137,21 +134,21 @@ if($tipo=="edicion"){
 	foreach( $_POST as $name => $value ) {
 		if($name=="pass"){$name="password";}
 		if($name!="token" && $name!="device" && $name!="tipo"){
-			if(mysql_query("UPDATE `cuentas` SET `".$name."` = '".$value."' WHERE `token` = '".$_POST["token"]."' LIMIT 1")){
-				$resultados["resultado"]="guardado";
+			if(mysql_query("UPDATE `cuentas` SET `".$name."` = '".$value."' WHERE `token` = '".$dataForm["token"]."' LIMIT 1")){
+				$dataStatus["resultado"]="guardado";
 			}
 			else {
-				$resultados["resultado"]="noguardado";
+				$dataStatus["resultado"]="noguardado";
 			}
 		}
 }  
 }
 ###FORMULARIO APORTAR DATO
 if($tipo!="contacto" && $tipo!="imgupload" && $tipo!="edicion" && $tipo!="verificacion"){
-	foreach ($_POST as $name => $value) {
+	foreach ($dataForm as $name => $value) {
 		if($name!="tipo" && $name!="token" && $name!="device"){
 			$columna=$name;
-			$dato=str_replace($caracteresB, $caracteresR, strtolower($_POST[$name]));
+			$dato=$_POST[$name]);
 
 			if($name=="titulo"){$columnaB="tlatino";}
 			if($name=="escritor"){$columnaB="director";}
@@ -160,15 +157,15 @@ if($tipo!="contacto" && $tipo!="imgupload" && $tipo!="edicion" && $tipo!="verifi
 			if(mysql_num_rows($siexiste)==0){
 
 				if(mysql_query("INSERT INTO `aportaciones` (`id`, `id_c`, `fecha`, `tipo`, `contenido`) VALUES (NULL, '".$cuenta."', '".date("Y-m-d H:i:s")."', '".$columna."', '".$dato."')")){
-    			$resultados["resultado"]="guardado";
+    			$dataStatus["resultado"]="guardado";
 				}
 				else {
-    			$resultados["resultado"]="noguardado";
+    			$dataStatus["resultado"]="noguardado";
 				}	
 			}
 			else 
 			{
-				$resultados["resultado"]="yaexiste";
+				$dataStatus["resultado"]="yaexiste";
 			}
 			
 		}
