@@ -1,110 +1,91 @@
 <?php
-if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') 
-{
+if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+
 include 'db.php';
 session_start();
 $dominio=$_SERVER['HTTP_HOST'];
-$ConectarDB();
-
-$caracteresB= array('+','*','=','|','&','<','>','(',')',';','#','"',"'");
-$caracteresR= array('','','','','','','','','','','','','');
 
 
-
-$correo=str_replace($caracteresB, $caracteresR, strtolower($_POST['correo']));
-
-
-#COMPROBAR SI HAN UTILIZADO ESTE EQUIPO 
-if($_SESSION['cuenta']!="" || $_POST["token"]!="" || $_POST["device"]!="" || $_COOKIE["token"]!="" || $_COOKIE["device"]!=""){
-	if($_SESSION["cuenta"]!=""){
-		$cuenta=$_SESSION["cuenta"];
-	}
-	else {
-		if($_POST["token"]!="" || $_COOKIE["token"]!=""){
-			if($_POST["token"]!=""){$token=$_POST["token"];}else {$token=$_COOKIE["token"];}
-			$usuarios=mysql_query("SELECT * FROM `cuentas` WHERE `token` = '".$token."' LIMIT 1");
-  			$usuario=mysql_fetch_row($usuarios);
-  			$cuenta=$usuario[0];
-  			
-  				#Si el correo no es el mismo de la cuenta ALERTA
-  				if ($correo!=$usuario[4]) {
-  					if(mysql_query("INSERT INTO `alertas` (`id`, `dominio`, `fecha`, `codigo`, `descripcion`) VALUES (NULL, '".$dominio."', '".date("Y-m-d H:i:s")."', 'ERROR01', 'El correo no es el mismo de la cuenta (".$cuenta.":".$correo.")')")){}
-  				}
-  				#Si esta mandando nombre y no esta registrado
-  				if($_POST["nombre"]!="" && $usuario[3]==""){
-  					$nombre=str_replace($caracteresB, $caracteresR, strtolower($_POST['correo']));
-  					if(mysql_query("UPDATE `cuentas` SET `nombre` = '".$nombre."' WHERE `id` = '".$cuenta."'  LIMIT 1")){}
-  				}
-
-		}
-		else {
-			if($_POST["device"]!="" || $_COOKIE["device"]!=""){
-				if($_POST["device"]!=""){$device=$_POST["device"];}else {$device=$_COOKIE["device"];}
-				$ids=mysql_query("SELECT `id` FROM `cuentas` WHERE `device` = '".$device."' LIMIT 1");
-  				$usuario=mysql_fetch_row($ids);
-  				$cuenta=$usuario[0];
-  				$status="APORTACION"; 
-  				#Si estan mandando correo
-  				if($_POST["correo"]!=""){
-  					$status="NOTIFICACION";
-  					$token=strtoupper(substr(md5(uniqid(rand())),0,10));
-  					#si estan mandando nombre(Form de contacto)
-  					if($_POST["nombre"]!=""){$set="`nombre`= '".str_replace($caracteresB, $caracteresR, strtolower($_POST['nombre']))."', "; $status="CONTACTO";}
-  					if(mysql_query("UPDATE `cuentas` SET ".$set."`correo` = '".$correo."', `token` = '".$token."', `status` = '".$status."' WHERE `device` = '".$_POST["device"]."'  LIMIT 1")){
-  						setcookie("token",$token,time()+7776000,"/");
-  						$resultados["token"]=$token;
-					}
-  				}
-			}
-		}
-
-	}
-
+#Caracteres a sustituir
+	$caracteresB= array('+','*','=','|','&','<','>','(',')',';','#','"',"'");
+	$caracteresR= array('','','','','','','','','','','','','');
+#Filtrar datos del formulario
+foreach( $_POST as $name => $value ) {
+	#Creando un array con los datos del formulario ya filtrados
+	$dataForm[$name]=str_replace($caracteresB, $caracteresR, strtolower($_POST[$name]));
 }
-#No lo han utilizado
-else {
-	#comprobar si estan mandando correo
-	if($correo!=""){
-		#Verificar si existe alguna cuenta relasionada
-		$ids=mysql_query("SELECT * FROM `cuentas` WHERE `correo` = '".$correo."' LIMIT 1");
-		$registros = mysql_num_rows($ids);
-		if($registros==0){
-		#No hay usuarios, crear uno
-			$status="NOTIFICACION";
-			if($_POST["nombre"]!=""){$nombre=str_replace($caracteresB, $caracteresR, strtolower($_POST['nombre'])); $status="CONTACTO";}
-			$device=substr(md5(uniqid(rand())),0,12);
-			$token=strtoupper(substr(md5(uniqid(rand())),0,10));
-			if(mysql_query("INSERT INTO `cuentas` (`id`, `dominio`, `fecha`, `nombre`, `correo`, `status`, `token`, `device`) VALUES (NULL, '".$dominio."', '".date("Y-m-d H:i:s")."', '".$correo."', '".$nombre."', '".$status."','".$token."','".$device."')")){
-					$cuenta=mysql_insert_id();
-					setcookie("token",$token,time()+7776000,"/");
-					$resultados["token"]=$token;
-					}
+#Validar datos del formulario
+foreach ($dataForm as $name => $value) {
+	  if($dataForm[$name]!=""){
+	  	$minLength=6;
+	  	$maxLength=32;
+	  	if($name=='nombre' || $name=='pass'){ $minLength=4; $maxLength=64;}
+	  	if($name=='mensaje' || $name=='comentario'){ $minLength=10; $maxLength=1024;}
+	  	if($name=='token'){$minLength=10; $maxLength=10;}
+	  	if($name=='device'){$minLength=12; $maxLength=12;}
 
-		}
-		#Si hay una cuenta relasionada
-		else {
-			#Asignar id y token de la cuenta
-			$usuario=mysql_fetch_row($ids);
-			$cuenta=$usuario[0];
-			setcookie("token",$usuario[7],time()+7776000,"/");
-			$resultados["token"]=$usuario[7];
-		}
-	}
-	#No estan mandando correo
-	else {
-		#Registrar equipo
-		$device=substr(md5(uniqid(rand())),0,12);
- 		if(mysql_query("INSERT INTO `cuentas` (`id`, `dominio`, `fecha`, `nombre`, `correo`, `status`, `token`, `device`) VALUES (NULL, '".$dominio."', '".date("Y-m-d H:i:s")."', '', '', 'APORTACION','','".$device."')")){
-		$cuenta=mysql_insert_id();
-		setcookie("device",$device,time()+7776000,"/");
-		$resultados["device"]=$device;
-		}
-	}
+	  	if(strlen($dataForm[$name])<$minLength && strlen($dataForm[$name])>$maxLength){
+	  		$dataStatus[$name]="invalido";
+	  	}
+	  	else {
+	  		if($name=='correo' || $name=='correoaenviar'){
+	  			if(preg_match('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#',$dataForm[$name])){
+	  				$dataStatus[$name]="valido";
+	  			}
+	  			else {
+	  				$dataStatus[$name]="invalido";
+	  			}
+	  		}
+	  		else{
+	  			if($name=='enlacepdf'){
+	  				if(preg_match('#^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})\/[\w \/.-]+?\.pdf$#',$dataForm[$name])){
+	  					$dataStatus[$name]="valido";
+	  				}
+	  				else {
+	  					$dataStatus[$name]="invalido";
+	  				}
+	  			}
+	  			else {
+	  				if($name=='token'||$name=='device'||$name=='tipo'){
+	  				}
+	  				else{
+	  					$dataStatus[$name]="valido";
+	  				}
+	  			}
+	  		}
+	  	}
+	  }
+	  else {
+	  	$dataStatus[$name]="sindatos";
+	  }
 }
 
+	  #Detectar si existe imagen a recibir
+if(!empty($_FILES)){ 
+		if(preg_match('#\.(?:jpe?g|png|gif)$#',$_FILES['imagen']['name'])){
+			if(filesize($_FILES['imagen']['tmp_name']) < 1024 * 1024 * 2){
+	  			$dataStatus['imagen']="valido";
+	  		}
+	  		else {
+	  			$dataStatus['imagen']="muygrande";
+	  		}
+	  	}
+	  	else {
+	  		$dataStatus['imagen']="noimagen";
+	  	}
+}
+
+#Verificar que todos los datos esten correctos
+foreach ($dataStatus as $name => $value) {
+	if(!$dataStatus[$name]=='valido'){ $dataError++;}
+
+}	
+
+include 'cuentas.php';
 
 
-$tipo=$_POST["tipo"];
+$tipo=$dataForm["tipo"];
+
 }
 
 ##FORMULARIO DE CONTACTO
@@ -194,5 +175,5 @@ if($tipo!="contacto" && $tipo!="imgupload" && $tipo!="edicion" && $tipo!="verifi
 	}
 }
 #cierre de JSON
-echo json_encode($resultados);
+echo json_encode($dataStatus);
 ?>

@@ -211,7 +211,7 @@ function checkINPUT(input){
         }
         else {
             if($(input).attr("type")=="email"){ 
-                if($(input).val().indexOf('@') == -1 || $(input).val().indexOf('.') == -1){
+                if(!/^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$/.test($(input).val())){
                     status="invalido";
                 }
                 else {
@@ -220,14 +220,7 @@ function checkINPUT(input){
             }
             else {
                 if($(input).attr("name")=="imagen"){
-                    ext=0;
-                    if($(input).val().lastIndexOf('.jpg') != -1){ ext=1;}
-                    if($(input).val().lastIndexOf('.png') != -1){ ext=1;}
-                    if($(input).val().lastIndexOf('.gif') != -1){ ext=1;}
-                    if($(input).val().lastIndexOf('.JPG') != -1){ ext=1;}
-                    if($(input).val().lastIndexOf('.PNG') != -1){ ext=1;}
-                    if($(input).val().lastIndexOf('.GIF') != -1){ ext=1;}
-                    if(ext != 1){
+                    if(!/\.(?:jpe?g|png|gif)$/.test($(input).val())){
                         status="noimagen";
                     }
                     else {
@@ -242,7 +235,7 @@ function checkINPUT(input){
                 }
                 else {
                     if($(input).attr("name")=="enlacepdf"){
-                        if($(input).val().indexOf('.pdf') == -1 || $(input).val().indexOf('http://') == -1){
+                        if(!/^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})\/[\w \/.-]+?\.pdf$/.test($(input).val())){
                             status="invalido";
                         }
                         else {
