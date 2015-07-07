@@ -19,6 +19,8 @@ foreach ($dataForm as $name => $value) {
 	  if($dataForm[$name]!=""){
 	  	$minLength=6;
 	  	$maxLength=32;
+	  	if($name=='id'){$minLength=1; $maxLength=10;}
+	  	if($name=='rating'){$minLength=1; $maxLength=1;}
 	  	if($name=='nombre' || $name=='pass'){ $minLength=4; $maxLength=64;}
 	  	if($name=='mensaje' || $name=='comentario'){ $minLength=10; $maxLength=1024;}
 	  	if($name=='token'){$minLength=10; $maxLength=10;}
@@ -173,6 +175,56 @@ if($tipo!="contacto" && $tipo!="imgupload" && $tipo!="edicion" && $tipo!="verifi
 			}
 			
 		}
+	}
+}
+###Agregar un rating
+if($dataForm['rating']){
+	if($dataForm['rating']==0){
+	if(mysql_query("UPDATE `rating` SET `rating` = '0' WHERE `id_c` = '".$cuenta."' AND  `id_a` = '".$dataForm['id']."'  LIMIT 1")){
+		$dataStatus["resultado"]="cancelado";
+	}
+	else {
+		$dataStatus["resultado"]="error";
+	}
+
+}
+if($dataForm['rating']!=0){
+	$ratings=mysql_query("SELECT * FROM `rating` WHERE `id_a` = '".$dataForm['id']."' AND `id_c` = '".$cuenta."' LIMIT 1");
+	$db_rating=mysql_fetch_row($ratings);
+	$registros = mysql_num_rows($ratings);
+	if($registros==0){
+		if(mysql_query("INSERT INTO `rating` (`id`, `id_c`, `id_a`, `rating`, `fecha`) VALUES (NULL, '".$cuenta."', '".$dataForm['id']."', '".$dataForm['rating']."', '".date("Y-m-d H:i:s")."')")){
+			$dataStatus["resultado"]="registrado";
+		}
+		else {
+			$dataStatus["resultado"]="error";
+		}
+	}
+	else {
+		if(mysql_query("UPDATE `rating` SET `rating` = '".$dataForm['rating']."' WHERE `id` = '".$db_rating[0]."' LIMIT 1")){
+			$dataStatus["resultado"]="actualizado";
+		}
+		else {
+			$dataStatus["resultado"]="error";
+		}
+	}
+}
+}
+##Agregar un Me gusta
+if($dataForm['text']){
+		$likes=mysql_query("SELECT * FROM `likes` WHERE `id_a` = '".$dataForm['id']."' AND `tipo` = '".$dataForm['text']."' AND `id_c` = '".$cuenta."' LIMIT 1");
+	$db_likes=mysql_fetch_row($likess);
+	$registros = mysql_num_rows($likes);
+	if($registros==0){
+		if(mysql_query("INSERT INTO `likes` (`id`, `id_c`, `id_a`, `tipo`, `fecha`) VALUES (NULL, '".$cuenta."', '".$dataForm['id']."', '".$dataForm['text']."', '".date("Y-m-d H:i:s")."')")){
+			$dataStatus["resultado"]="correcto";
+		}
+		else {
+			$dataStatus["resultado"]="incorrecto";
+		}
+	}
+	else {
+			$dataStatus["resultado"]="correcto";
 	}
 }
 #cierre de JSON
