@@ -85,7 +85,7 @@ $(this).on("submit", function() {
      $($(this).find('input,textarea,select')).each(function(){
         if($(this).is(':disabled')){}
         else {
-            if($(this).attr('name')!='opciones'){
+            if($(this).attr('name')!='opciones'&&$(this).attr('name')!='autopass'){
             status[$(this).attr('name')]=checkINPUT($(this)); 
             inputs[$(this).attr('name')]=$(this);
                 if($(this).attr('name')=='titulo'||$(this).attr('name')=='escritor'||$(this).attr('name')=='imagen'){
@@ -146,13 +146,10 @@ if(alert_sindatos=="" && alert_invalido=="" && alert_imagen=="" && alert_repass=
         formulario.append("device", localStorage.getItem("device")); }
     //Contabiliza el numero de intentos
     if(typeof(x) != "undefined") {x=x+1; } else {x=1}
-    //Determina la ruta de envio del formulario
-    path="../js/formularios.php";
-    if(tipo=="preregistro" || tipo=="password" || tipo=="ingresar" || tipo=="salir"){ path="../js/login.php"}
     //Envio del formulario con AJAX
         $.ajax({
             type: "POST",
-            url: path,
+            url: "../js/formularios.php",
             dataType: "json",
             data: formulario,
             cache: false,
