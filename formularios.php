@@ -58,7 +58,11 @@ foreach ($dataForm as $name => $value) {
 	  	}
 	  }
 	  else {
-	  	$dataStatus[$name]="sindatos";
+	  	if($name=='token'||$name=='device'){
+	  	}
+	  	else{
+	  		$dataStatus[$name]="sindatos";
+	  	}
 	  }
 }
 
@@ -150,7 +154,7 @@ if($tipo=="edicion"){
 }  
 }
 ###FORMULARIO APORTAR DATO
-if($tipo!="contacto" && $tipo!="imgupload" && $tipo!="edicion" && $tipo!="verificacion"){
+if($tipo!="contacto" && $tipo!="imgupload" && $tipo!="edicion" && $tipo!="verificacion" && $dataForm['id']==NULL){
 	foreach ($dataForm as $name => $value) {
 		if($name!="tipo" && $name!="token" && $name!="device"){
 			$columna=$name;
@@ -178,7 +182,7 @@ if($tipo!="contacto" && $tipo!="imgupload" && $tipo!="edicion" && $tipo!="verifi
 	}
 }
 ###Agregar un rating
-if($dataForm['rating']){
+if($dataForm['rating']!=NULL){
 	if($dataForm['rating']==0){
 	if(mysql_query("UPDATE `rating` SET `rating` = '0' WHERE `id_c` = '".$cuenta."' AND  `id_a` = '".$dataForm['id']."'  LIMIT 1")){
 		$dataStatus["resultado"]="cancelado";

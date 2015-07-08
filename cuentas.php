@@ -34,8 +34,8 @@ if($_SESSION['cuenta']!="" || $dataForm["token"]!="" || $dataForm["device"]!="" 
   					$status="NOTIFICACION";
   					$token=strtoupper(substr(md5(uniqid(rand())),0,10));
   					#si estan mandando nombre(Form de contacto)
-  					if($dataForm["nombre"]!=""){$set="`nombre`= '".$dataForm['nombre']))."', "; $status="CONTACTO";}
-  					if(mysql_query("UPDATE `cuentas` SET ".$set."`correo` = '".$correo."', `token` = '".$token."', `status` = '".$status."' WHERE `device` = '".$dataForm["device"]."'  LIMIT 1")){
+  					if($dataForm["nombre"]!=""){$set="`nombre`= '".$dataForm['nombre']."', "; $status="CONTACTO";}
+  					if(mysql_query("UPDATE `cuentas` SET ".$set."`correo` = '".$dataForm['correo']."', `token` = '".$token."', `status` = '".$status."' WHERE `device` = '".$device."'  LIMIT 1")){
   						setcookie("token",$token,time()+7776000,"/");
   						$dataStatus["token"]=$token;
 					}
