@@ -258,6 +258,50 @@ $(this).on('click', function(){
          });
 });
 }
+/*Procesar Link report*/
+$.fn.linkreport = function (){
+    //Enviar Me gusta, quiero leerlo, etc
+$(this).on('click', function(){
+    id=$(this).attr('id');
+    elemento=$(this).parents('div.input-group').first();
+    showcontrol=$(elemento).find("span.input-group-addon");
+    btncontrol=$(elemento).find("button.btn-pdfl").first();
+     var formulario = new FormData();
+    formulario.append("id", id);
+    formulario.append("tipo", "linkreport");
+    if (localStorage.getItem("token") === null) {} else {
+        formulario.append("token", localStorage.getItem("token")); }
+    if (localStorage.getItem("device") === null) {} else {
+        formulario.append("device", localStorage.getItem("device")); }
+         $.ajax({
+           type: "POST",
+           url: "../js/formularios.php",
+           dataType: "json",
+           data: formulario,// Adjuntar los campos del formulario enviado.
+           cache: false,
+           contentType: false,
+           processData: false,
+           success: function(data)
+           {
+                if(data.token!=undefined || data.device!=undefined){ addLS(data)}
+                if(data.resultado=="correcto"){  
+                    $(btncontrol).empty().html('<i class="fa fa-check"></i>');
+                }
+                if(data.resultado=="incorrecto"){
+                    $(btncontrol).empty().html('<i class="fa fa-times"></i>').removeAttr("disabled");
+                }
+           },
+           beforeSend: function() 
+           {   
+              $(btncontrol).empty().html('<i class="fa fa-cog fa-spin"></i>').attr("disabled","disabled");
+           },
+            error: function()
+           {   
+                $(btncontrol).empty().html('<i class="fa fa-warning"></i>!').removeAttr("disabled");
+           }
+         });
+});
+}
 function checkINPUT(input){
     var status ="";
     if($(input).val()!=""){

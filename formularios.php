@@ -181,12 +181,22 @@ if($tipo=="titulo" || $tipo=="escritor"){
 		}
 	}
 }
+#Recomendar enlace PDF
 if($tipo=="enlacepdf"){
 	if(mysql_query("INSERT INTO `enlacespdf` (`id`, `id_c`, `id_a`, `fecha`, `enlace`) VALUES (NULL, '".$cuenta."', '".$dataForm['id']."', '".date("Y-m-d H:i:s")."','".$dataForm['enlacepdf']."')")){
     	$dataStatus["resultado"]="guardado";
 	}
 	else {
     	$dataStatus["resultado"]="noguardado";
+	}
+}
+#Reportar enlace roto
+if($tipo=="linkreport"){
+	if(mysql_query("UPDATE `enlacespdf` SET `linkbroke` = (`linkbroke` + 1) WHERE `id` = '".$dataForm['id']."' LIMIT 1")){
+    	$dataStatus["resultado"]="correcto";
+	}
+	else {
+    	$dataStatus["resultado"]="incorrecto";
 	}
 }
 ###Agregar un rating
