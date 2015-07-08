@@ -261,10 +261,12 @@ $(this).on('click', function(){
 function checkINPUT(input){
     var status ="";
     if($(input).val()!=""){
-        length=6;
-        if($(input).attr("name")=="nombre" || $(input).attr("name")=="pass"){ length = 3; }
-        if($(input).attr("name")=="comentario"){ length = 10; }
-        if($(input).val().length <= length){
+        minLength=6;
+        maxLength=32;
+        if($(input).attr('name')=="id"){ minLength=1; maxLength=10;}
+        if($(input).attr("name")=="nombre" || $(input).attr("name")=="pass"){ minLength = 4; maxLength=64;}
+        if($(input).attr("name")=="comentario"){ minLength = 10; maxLength=1024;}
+        if($(input).val().length < minLength && $(input).val().length > maxLength){
             status="invalido";
         }
         else {
@@ -366,8 +368,8 @@ function mostrarMENSAJE(inputs,status,result){
 }
 function successAJAX(resultado,tipo,result,btncontrol,inputs){
 
-    if(tipo=="contacto"){ texto = '<i class="fa fa-check-circle"></i>Su comentario se a enviado. <b>Gracias por contactarnos</b>.'}
-    if(tipo=="titulo" || tipo=="escritor"){ texto= '<i class="fa fa-check-circle"></i> <b>Gracias por tu aportacion !!</b>.';}
+    if(tipo=="contacto"){ texto = '<i class="fa fa-check-circle"></i>Su mensaje se a enviado. <b>Gracias por contactarnos</b>.'}
+    if(tipo=="titulo" || tipo=="escritor" || tipo=="enlacepdf"){ texto= '<i class="fa fa-check-circle"></i> <b>Gracias por tu aportacion !!</b>.';}
     if(tipo=="imgupload"){ texto='<i class="fa fa-check-circle"></i> <b>Gracias por compartir !</b>, pronto la publicaremos.';}
     if(tipo=="password"){ texto='<i class="fa fa-check-square-o"></i> <b>Registro completado !!</b>, revisa tu bandeja.';}
     if(tipo=="edicion"){ texto='<i class="fa fa-check-square-o"></i> <b>Cambio realizado !!</b>';}
@@ -420,7 +422,7 @@ function successAJAX(resultado,tipo,result,btncontrol,inputs){
         }
         if(resultado=="duplicado"){
             $(btncontrol).empty().append('<i class="fa fa-user-times"></i> <span class="hidden-xxs hidden-sm">Ya existe !!</span>').removeAttr("disabled");
-            $(inputs["correo"]).removeAttr("disabled");
+            $(inputs["correo"]).removeAttr("readonly");
             mostrarMENSAJE(inputs,"duplicado",result);
         }
         if(resultado=="logout"){

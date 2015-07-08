@@ -159,6 +159,7 @@ if($tipo=="titulo" || $tipo=="escritor"){
 			$columna=$name;
 			$dato=$value;
 
+
 			if($name=="titulo"){$columnaB="tlatino";}
 			if($name=="escritor"){$columnaB="director";}
 			$siexiste=mysql_query("SELECT * FROM `contenidos` WHERE `".$columnaB."` = '".$dato."' LIMIT 1");
@@ -178,6 +179,14 @@ if($tipo=="titulo" || $tipo=="escritor"){
 			}
 			
 		}
+	}
+}
+if($tipo=="enlacepdf"){
+	if(mysql_query("INSERT INTO `enlacespdf` (`id`, `id_c`, `id_a`, `fecha`, `enlace`) VALUES (NULL, '".$cuenta."', '".$dataForm['id']."', '".date("Y-m-d H:i:s")."','".$dataForm['enlacepdf']."')")){
+    	$dataStatus["resultado"]="guardado";
+	}
+	else {
+    	$dataStatus["resultado"]="noguardado";
 	}
 }
 ###Agregar un rating
