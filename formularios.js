@@ -387,7 +387,7 @@ function successAJAX(resultado,tipo,result,btncontrol,inputs){
             if(tipo=="titulo" || tipo=="escritor"){
                 $(btncontrol).empty().append('<i class="fa fa-check-circle"></i> <i class="fa fa-share"></i>').removeAttr("disabled"); 
                 for(var name in inputs) {
-                    $(inputs[name]).val("").attr("placeholder","Agregar otro "+name+" ...").removeAttr("disabled");
+                    $(inputs[name]).val("").attr("placeholder","Agregar otro "+name+" ...").removeAttr("readonly");
                 } 
             }
             if(tipo=="imgupload"){
@@ -415,7 +415,7 @@ function successAJAX(resultado,tipo,result,btncontrol,inputs){
         }
         if(resultado=="incorrecto"){
             $(btncontrol).empty().append('<i class="fa fa-warning"></i> <span class="hidden-xxs hidden-sm">Reintentar !!</span>').removeAttr("disabled");
-            $(inputs["correo"]).removeAttr("disabled");
+            $(inputs["correo"]).removeAttr("readonly");
             mostrarMENSAJE(inputs,"noguardado",result);
         }
         if(resultado=="duplicado"){
@@ -429,14 +429,14 @@ function successAJAX(resultado,tipo,result,btncontrol,inputs){
         if(resultado=="nologin"){
             $(result).empty().append('<div class="col-xs-12"><div class="alert alert-error alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><i class="fa fa-warning"></i> <b>Error !</b>, correo o contraseña no son correctas.</div></div>');
             $(btncontrol).empty().append('<i class="fa fa-sign-in"></i> Ingresar').removeAttr("disabled");
-            $(inputs["correo"]).removeAttr("disabled");
-            $(inputs["pass"]).removeAttr("disabled"); 
+            $(inputs["correo"]).removeAttr("readonly");
+            $(inputs["pass"]).removeAttr("readonly"); 
         }
         if(resultado=="errorpwd"){
             $(result).empty().append('<div class="col-xs-12"><div class="alert alert-error alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><i class="fa fa-warning"></i> <b>Error !</b>, La contraseña no es correcta, <button class="btn btn-default btn-danger">Enviar a mi correo !</button>. </div></div>'); 
             $(btncontrol).empty().append('<i class="fa fa-sign-in"></i> Ingresar').removeAttr("disabled");
-            $(inputs["correo"]).removeAttr("disabled");
-            $(inputs["pass"]).removeAttr("disabled");
+            $(inputs["correo"]).removeAttr("readonly");
+            $(inputs["pass"]).removeAttr("readonly");
         }
         if(resultado=="login"){
             $(result).empty().append('<div class="col-xs-12"><div class="alert alert-text alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><i class="fa fa-info-circle"></i> Bienvenido. </div></div>');
@@ -445,7 +445,7 @@ function successAJAX(resultado,tipo,result,btncontrol,inputs){
         if(resultado=="yaexiste"){
         $(btncontrol).empty().append('<i class="fa fa-warning"></i> <i class="fa fa-share"></i>').removeAttr("disabled"); 
             for(var name in inputs) {
-                $(inputs[name]).val("").attr("placeholder","Agregar otro "+name+" ...").removeAttr("disabled");
+                $(inputs[name]).val("").attr("placeholder","Agregar otro "+name+" ...").removeAttr("readonly");
                 $(result).append('<div class="col-xs-12"><div class="alert alert-text alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Ya existe este <b>'+name+'</b></div></div>');
             } 
             
@@ -454,7 +454,7 @@ function successAJAX(resultado,tipo,result,btncontrol,inputs){
 }
 function beforesendAJAX(tipo,result,btncontrol,inputs){
     for(var name in inputs) {
-        if(name!="imagen"){$(inputs[name]).attr("disabled","disabled");}
+        if(name!="imagen"){$(inputs[name]).attr("readonly","readonly");}
     }
     if (tipo=="contacto") {
         $(btncontrol).empty().append('Enviado comentario ... <i class="fa fa-refresh fa-spin"></i>').attr("disabled","disabled");

@@ -153,7 +153,7 @@ if($tipo=="edicion"){
 }  
 }
 ###FORMULARIO APORTAR DATO
-if($tipo=="titulo"&&$tipo=="escritor"){
+if($tipo=="titulo" || $tipo=="escritor"){
 	foreach ($dataForm as $name => $value) {
 		if($name!="tipo" && $name!="token" && $name!="device"){
 			$columna=$name;
