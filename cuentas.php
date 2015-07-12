@@ -59,7 +59,7 @@ else {
 			if($dataForm["nombre"]!=""){ $status="CONTACTO";}
 			$device=substr(md5(uniqid(rand())),0,12);
 			$token=strtoupper(substr(md5(uniqid(rand())),0,10));
-			if(mysql_query("INSERT INTO `cuentas` (`id`, `dominio`, `fecha`, `nombre`, `correo`, `status`, `token`, `device`) VALUES (NULL, '".$dominio."', '".date("Y-m-d H:i:s")."', '".$dataForm['correo']."', '".$dataForm['nombre']."', '".$status."','".$token."','".$device."')")){
+			if(mysql_query("INSERT INTO `cuentas` (`id`, `dominio`, `fecha`, `nombre`, `correo`, `status`, `token`, `device`) VALUES (NULL, '".$dominio."', '".date("Y-m-d H:i:s")."', '".$dataForm['nombre']."', '".$dataForm['correo']."', '".$status."','".$token."','".$device."')")){
 					$cuenta=mysql_insert_id();
 					setcookie("token",$token,time()+7776000,"/");
 					$dataStatus["token"]=$token;

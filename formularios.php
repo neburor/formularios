@@ -100,7 +100,7 @@ include 'cuentas.php';
 ##FORMULARIO DE CONTACTO
 if($tipo=="contacto"){
 
-	if($dataForm['correo'] == "" || $dataForm['nombre'] == "" || ($dataForm['mensaje'] == "" || $dataForm['comentario'] == "") ) {
+	if($dataForm['correo'] == "" || $dataForm['nombre'] == "" || $dataForm['mensaje'] == "" ) {
 	  $dataStatus["resultado"]="sindatos";
 	}
 	else{
