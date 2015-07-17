@@ -381,8 +381,7 @@ function successAJAX(resultado,tipo,result,btncontrol,inputs){
             $(inputs["pass"]).removeAttr("readonly");
         }
         if(resultado=="login"){
-            $(result).empty().append('<div class="col-xs-12"><div class="alert alert-text alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><i class="fa fa-info-circle"></i> Bienvenido. </div></div>');
-            $(btncontrol).empty().append('<i class="fa fa-check-circle"></i> Correcto !! '); 
+            window.location.href('http://www.pdflibros.org/perfil.php');
         }
         if(resultado=="yaexiste"){
         $(btncontrol).empty().append('<i class="fa fa-warning"></i> <i class="fa fa-share"></i>').removeAttr("disabled"); 
