@@ -381,7 +381,7 @@ function successAJAX(resultado,tipo,result,btncontrol,inputs){
             $(inputs["pass"]).removeAttr("readonly");
         }
         if(resultado=="login"){
-            window.location.href('http://www.pdflibros.org/perfil.php');
+            location.replace('../perfil.php');
         }
         if(resultado=="yaexiste"){
         $(btncontrol).empty().append('<i class="fa fa-warning"></i> <i class="fa fa-share"></i>').removeAttr("disabled"); 
