@@ -83,6 +83,7 @@ else {
 		$status="APORTACION";
 		if($dataForm["text"]!=""){$status="LIKE";}
 		if($dataForm["rating"]!=""){ $status="RATING"; }
+		if($dataForm["q"]!=""){$status="BUSQUEDA";}
 		$device=substr(md5(uniqid(rand())),0,12);
  		if(mysql_query("INSERT INTO `cuentas` (`id`, `dominio`, `fecha`, `nombre`, `correo`, `status`, `token`, `device`) VALUES (NULL, '".$dominio."', '".date("Y-m-d H:i:s")."', '', '', '".$status."','','".$device."')")){
 		$cuenta=mysql_insert_id();
